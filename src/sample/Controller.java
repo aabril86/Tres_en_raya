@@ -4,9 +4,7 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 
 import javax.swing.*;
 import java.net.URL;
@@ -20,6 +18,8 @@ public class Controller implements Initializable {
     Button start, b00, b01, b02, b10, b11, b12, b20, b21, b22;
     @FXML
     ToggleGroup g1;
+    @FXML
+    Label info;
 
     public void selected(ActionEvent actionEvent) {
         start.setVisible(true);
@@ -28,6 +28,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         start.setVisible(false);
+        info.setVisible(false);
         disableButtons();
 
     }
@@ -69,7 +70,8 @@ public class Controller implements Initializable {
 
     public void pvpGame(){
         enableButtons();
-
+        info.setText("x turn");
+        info.setVisible(true);
 
     }
 
