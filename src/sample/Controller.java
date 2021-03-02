@@ -8,6 +8,9 @@ import javafx.scene.control.*;
 
 import javax.swing.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -33,50 +36,75 @@ public class Controller implements Initializable {
 
     }
 
+
+
     public void onClick(ActionEvent actionEvent) {
 
-        Button b = (Button) actionEvent.getSource();
-        b.setText("X");
-    }
-
-
-    public void startGame(ActionEvent actionEvent) {
         RadioButton rb = (RadioButton) g1.getSelectedToggle();
 
-        int op = -1;
-        if(rb.getId().equals("op1")) op = 1;
-        if(rb.getId().equals("op2")) op = 2;
-        if(rb.getId().equals("op3")) op = 3;
+        if (rb != null){
 
-
-        switch(op){
-
-            case 1:
-                pvcGame();
-                break;
-            case 2:
-                pvpGame();
-                break;
-            case 3:
-                cvcGame();
-                break;
+            if (op1.isSelected()) pvcGame(actionEvent);
+            if (op2.isSelected()) pvpGame(actionEvent);
+            if (op3.isSelected()) cvcGame(actionEvent);
         }
-    }
-
-    public void pvcGame(){
-        enableButtons();
 
     }
 
-    public void pvpGame(){
-        enableButtons();
-        info.setText("x turn");
+    boolean turn = true;
+
+    public void pvcGame(ActionEvent actionEvent){
+        Button b = (Button) actionEvent.getSource();
+        int rNum;
+        List<Button> buttonList = Arrays.asList(b00, b01, b02, b10, b11, b12, b20, b21, b22);
+
         info.setVisible(true);
 
+            if(turn) {
+                info.setText("CPU turn");
+
+                if (b.getText().equals("")){
+                    b.setText("X");
+                    checkWinner();
+                    turn = false;
+                }
+            }else{
+                //TODO HACER LA MAQUINA ESTA
+            }
+
+
+
+
+
     }
 
-    public void cvcGame(){
-        enableButtons();
+
+    public void pvpGame(ActionEvent actionEvent){
+        Button b = (Button) actionEvent.getSource();
+
+        info.setVisible(true);
+        if(turn){
+            info.setText("O turn");
+            if(b.getText().equals("")){
+                b.setText("X");
+                checkWinner();
+                turn = false;
+            }
+        }else {
+            info.setText("X turn");
+            if(b.getText().equals("")){
+                b.setText("O");
+                checkWinner();
+                turn = true;
+            }
+        }
+
+
+
+    }
+
+    public void cvcGame(ActionEvent actionEvent){
+
 
     }
 
@@ -103,5 +131,69 @@ public class Controller implements Initializable {
         b20.setDisable(false);
         b21.setDisable(false);
         b22.setDisable(false);
+    }
+
+    //Metodo comprobar ganador
+    public boolean checkWinner(){
+
+        //COMPROBAR HORIZONTALES
+        if(!b00.getText().equals("") && !b01.getText().equals("") && b00.getText().equals(b01.getText()) && b01.getText().equals(b02.getText())) {
+            disableButtons();
+            info.setText(b00.getText() + " wins");
+            return true;
+
+        }
+        if (!b10.getText().equals("") && !b11.getText().equals("") && b10.getText().equals(b11.getText()) && b11.getText().equals(b12.getText())) {
+            disableButtons();
+            info.setText(b10.getText() + " wins");
+            return true;
+
+        }
+        if (!b21.getText().equals("") && !b20.getText().equals("") && b20.getText().equals(b21.getText()) && b21.getText().equals(b22.getText())) {
+            disableButtons();
+            info.setText(b20.getText() + " wins");
+            return true;
+
+        }
+        //COMPROBAR VERTICALES
+        if(!b00.getText().equals("") && !b10.getText().equals("") && b00.getText().equals(b10.getText()) && b10.getText().equals(b20.getText())) {
+            disableButtons();
+            info.setText(b00.getText() + " wins");
+            return true;
+
+        }
+        if (!b01.getText().equals("") && !b11.getText().equals("") && b01.getText().equals(b11.getText()) && b11.getText().equals(b21.getText())) {
+            disableButtons();
+            info.setText(b01.getText() + " wins");
+            return true;
+
+        }
+        if (!b02.getText().equals("") && !b12.getText().equals("") && b02.getText().equals(b12.getText()) && b12.getText().equals(b22.getText())) {
+            disableButtons();
+            info.setText(b02.getText() + " wins");
+            return true;
+
+        }
+
+        //COMPROBAR DIAGONALES
+        if (!b00.getText().equals("") && !b11.getText().equals("") && b00.getText().equals(b11.getText()) && b11.getText().equals(b22.getText())) {
+            disableButtons();
+            info.setText(b00.getText() + " wins");
+            return true;
+
+        }
+        if (!b02.getText().equals("") && !b11.getText().equals("") && b02.getText().equals(b11.getText()) && b11.getText().equals(b20.getText())) {
+            disableButtons();
+            info.setText(b02.getText() + " wins");
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public void starts(ActionEvent actionEvent) {
+        enableButtons();
+
     }
 }
