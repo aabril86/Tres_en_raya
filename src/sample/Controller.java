@@ -8,10 +8,7 @@ import javafx.scene.control.*;
 
 import javax.swing.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class Controller implements Initializable {
 
@@ -24,6 +21,7 @@ public class Controller implements Initializable {
     @FXML
     Label info;
 
+    int n = 0;
     public void selected(ActionEvent actionEvent) {
         start.setVisible(true);
     }
@@ -46,42 +44,49 @@ public class Controller implements Initializable {
 
             if (op1.isSelected()) pvcGame(actionEvent);
             if (op2.isSelected()) pvpGame(actionEvent);
-            if (op3.isSelected()) cvcGame(actionEvent);
+            //if (op3.isSelected()) cvcGame(actionEvent);
         }
 
     }
 
     boolean turn = true;
+    int nturnos = 0;
 
+    //PLAYER VS CPU
     public void pvcGame(ActionEvent actionEvent){
         Button b = (Button) actionEvent.getSource();
+        List<Button>  buttons = new ArrayList<Button>(Arrays.asList(b00, b01, b02, b10, b11, b12, b20, b21, b22));
+        Button button;
+        start.setVisible(false);
         int rNum;
-        List<Button> buttonList = Arrays.asList(b00, b01, b02, b10, b11, b12, b20, b21, b22);
-
+        boolean b1 = false;
         info.setVisible(true);
+        info.setText("O turn");
+        if (b.getText().equals("")){
+            b.setText("X");
+            checkWinner();
 
-            if(turn) {
-                info.setText("CPU turn");
+            while(!b1 && nturnos <=3){
+                rNum = (int) (Math.random()*9);
+                button = buttons.get(rNum);
 
-                if (b.getText().equals("")){
-                    b.setText("X");
+                if(button.getText().equals("")){
+                    button.setText("O");
+                    nturnos++;
                     checkWinner();
-                    turn = false;
+                    b1 = true;
                 }
-            }else{
-                //TODO HACER LA MAQUINA ESTA
             }
-
-
-
+        }
 
 
     }
 
-
+    //PLAYER VS PLAYER
     public void pvpGame(ActionEvent actionEvent){
         Button b = (Button) actionEvent.getSource();
 
+        start.setVisible(false);
         info.setVisible(true);
         if(turn){
             info.setText("O turn");
@@ -103,8 +108,36 @@ public class Controller implements Initializable {
 
     }
 
+    //CPU VS CPU
+    //TODO ESTO
     public void cvcGame(ActionEvent actionEvent){
+        Button b = (Button) actionEvent.getSource();
+        List<Button>  buttons = new ArrayList<Button>(Arrays.asList(b00, b01, b02, b10, b11, b12, b20, b21, b22));
+        Button button;
+        Boolean b1 = false;
+        info.setVisible(true);
+        start.setVisible(false);
+        while(!b1){
 
+                int rNum = (int) (Math.random()*9);
+                button = buttons.get(rNum);
+
+                if("".equals(button.getText())){
+
+                    if(turn){
+                        info.setText("O turn");
+                        button.setText("X");
+                        if(checkWinner()) break;
+                        turn = false;
+                    }else{
+                        info.setText("X turn");
+                        button.setText("O");
+                        if(checkWinner()) break;
+                        turn = true;
+                    }
+                    b1 = true;
+                }
+        }
 
     }
 
@@ -135,23 +168,26 @@ public class Controller implements Initializable {
 
     //Metodo comprobar ganador
     public boolean checkWinner(){
-
+        n++;
         //COMPROBAR HORIZONTALES
         if(!b00.getText().equals("") && !b01.getText().equals("") && b00.getText().equals(b01.getText()) && b01.getText().equals(b02.getText())) {
             disableButtons();
             info.setText(b00.getText() + " wins");
+            start.setVisible(true);
             return true;
 
         }
         if (!b10.getText().equals("") && !b11.getText().equals("") && b10.getText().equals(b11.getText()) && b11.getText().equals(b12.getText())) {
             disableButtons();
             info.setText(b10.getText() + " wins");
+            start.setVisible(true);
             return true;
 
         }
         if (!b21.getText().equals("") && !b20.getText().equals("") && b20.getText().equals(b21.getText()) && b21.getText().equals(b22.getText())) {
             disableButtons();
             info.setText(b20.getText() + " wins");
+            start.setVisible(true);
             return true;
 
         }
@@ -159,18 +195,21 @@ public class Controller implements Initializable {
         if(!b00.getText().equals("") && !b10.getText().equals("") && b00.getText().equals(b10.getText()) && b10.getText().equals(b20.getText())) {
             disableButtons();
             info.setText(b00.getText() + " wins");
+            start.setVisible(true);
             return true;
 
         }
         if (!b01.getText().equals("") && !b11.getText().equals("") && b01.getText().equals(b11.getText()) && b11.getText().equals(b21.getText())) {
             disableButtons();
             info.setText(b01.getText() + " wins");
+            start.setVisible(true);
             return true;
 
         }
         if (!b02.getText().equals("") && !b12.getText().equals("") && b02.getText().equals(b12.getText()) && b12.getText().equals(b22.getText())) {
             disableButtons();
             info.setText(b02.getText() + " wins");
+            start.setVisible(true);
             return true;
 
         }
@@ -179,12 +218,22 @@ public class Controller implements Initializable {
         if (!b00.getText().equals("") && !b11.getText().equals("") && b00.getText().equals(b11.getText()) && b11.getText().equals(b22.getText())) {
             disableButtons();
             info.setText(b00.getText() + " wins");
+            start.setVisible(true);
             return true;
 
         }
         if (!b02.getText().equals("") && !b11.getText().equals("") && b02.getText().equals(b11.getText()) && b11.getText().equals(b20.getText())) {
             disableButtons();
             info.setText(b02.getText() + " wins");
+            start.setVisible(true);
+            return true;
+        }
+
+        //COMPROBAR EMPATE
+        if (n == 9){
+            disableButtons();
+            info.setText("Tie");
+            start.setVisible(true);
             return true;
         }
 
@@ -193,7 +242,25 @@ public class Controller implements Initializable {
     }
 
     public void starts(ActionEvent actionEvent) {
+        n = 0;
+        clearButtons();
         enableButtons();
+        if (op3.isSelected()) cvcGame(actionEvent);
 
     }
+
+    public void clearButtons(){
+        b00.setText("");
+        b01.setText("");;
+        b02.setText("");;
+        b10.setText("");
+        b11.setText("");
+        b12.setText("");
+        b20.setText("");
+        b21.setText("");
+        b22.setText("");
+
+        info.setText("");
+    }
+
 }
