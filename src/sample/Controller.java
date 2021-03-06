@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.net.URL;
@@ -25,6 +26,8 @@ public class Controller implements Initializable {
     TextField playerName,player2name;
     @FXML
     Text playerNameText, player2nametext;
+    @FXML
+    MenuItem about;
 
     private int n = 0;
     private String player, player2;
@@ -398,4 +401,5 @@ public class Controller implements Initializable {
         save.setVisible(false);
 
     }
+
 }
