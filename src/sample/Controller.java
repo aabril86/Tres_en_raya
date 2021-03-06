@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 
 import javax.swing.*;
 import java.net.URL;
@@ -15,14 +16,42 @@ public class Controller implements Initializable {
     @FXML
     RadioButton op1, op2, op3;
     @FXML
-    Button nextMove, start, b00, b01, b02, b10, b11, b12, b20, b21, b22;
+    Button nextMove, start, save , b00, b01, b02, b10, b11, b12, b20, b21, b22;
     @FXML
     ToggleGroup g1;
     @FXML
     Label info;
+    @FXML
+    TextField playerName,player2name;
+    @FXML
+    Text playerNameText, player2nametext;
 
-    int n = 0;
+    private int n = 0;
+    private String player, player2;
     public void selected(ActionEvent actionEvent) {
+        if(op1.isSelected()){
+            if(player2nametext.isVisible()) player2nametext.setVisible(false);
+            if(player2name.isVisible()) player2name.setVisible(false);
+            playerName.setVisible(true);
+            playerNameText.setVisible(true);
+            save.setVisible(true);
+        }
+
+        if(op2.isSelected()){
+            playerName.setVisible(true);
+            playerNameText.setVisible(true);
+            player2nametext.setVisible(true);
+            player2name.setVisible(true);
+            save.setVisible(true);
+        }
+
+        if(op3.isSelected()){
+            playerName.setVisible(false);
+            playerNameText.setVisible(false);
+            save.setVisible(false);
+            player2nametext.setVisible(false);
+            player2name.setVisible(false);
+        }
         start.setVisible(true);
     }
 
@@ -31,6 +60,11 @@ public class Controller implements Initializable {
         start.setVisible(false);
         info.setVisible(false);
         nextMove.setVisible(false);
+        playerName.setVisible(false);
+        playerNameText.setVisible(false);
+        save.setVisible(false);
+        player2nametext.setVisible(false);
+        player2name.setVisible(false);
         disableButtons();
 
     }
@@ -45,13 +79,13 @@ public class Controller implements Initializable {
 
             if (op1.isSelected()) pvcGame(actionEvent);
             if (op2.isSelected()) pvpGame(actionEvent);
-            //if (op3.isSelected()) cvcGame(actionEvent);
+
         }
 
     }
 
-    boolean turn = true;
-    int nturnos = 0;
+    private boolean turn = true;
+    private int nturnos = 0;
 
     //PLAYER VS CPU
     public void pvcGame(ActionEvent actionEvent){
@@ -66,6 +100,7 @@ public class Controller implements Initializable {
         if (b.getText().equals("")){
             b.setText("X");
             checkWinner();
+            info.setText("O turn");
 
             while(!b1 && nturnos <=3){
                 rNum = (int) (Math.random()*9);
@@ -75,6 +110,7 @@ public class Controller implements Initializable {
                     button.setText("O");
                     nturnos++;
                     checkWinner();
+                    info.setText(player + " turn");
                     b1 = true;
                 }
             }
@@ -90,14 +126,14 @@ public class Controller implements Initializable {
         start.setVisible(false);
         info.setVisible(true);
         if(turn){
-            info.setText("O turn");
+            info.setText(player2 + " turn");
             if(b.getText().equals("")){
                 b.setText("X");
                 checkWinner();
                 turn = false;
             }
         }else {
-            info.setText("X turn");
+            info.setText(player + " turn");
             if(b.getText().equals("")){
                 b.setText("O");
                 checkWinner();
@@ -173,7 +209,15 @@ public class Controller implements Initializable {
         //COMPROBAR HORIZONTALES
         if(!b00.getText().equals("") && !b01.getText().equals("") && b00.getText().equals(b01.getText()) && b01.getText().equals(b02.getText())) {
             disableButtons();
-            info.setText(b00.getText() + " wins");
+            if(op1.isSelected()){
+                if(b00.getText().equals("O")) info.setText(b00.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b00.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b00.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -181,7 +225,15 @@ public class Controller implements Initializable {
         }
         if (!b10.getText().equals("") && !b11.getText().equals("") && b10.getText().equals(b11.getText()) && b11.getText().equals(b12.getText())) {
             disableButtons();
-            info.setText(b10.getText() + " wins");
+            if(op1.isSelected()){
+                if(b10.getText().equals("O")) info.setText(b10.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b10.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b10.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -189,7 +241,15 @@ public class Controller implements Initializable {
         }
         if (!b21.getText().equals("") && !b20.getText().equals("") && b20.getText().equals(b21.getText()) && b21.getText().equals(b22.getText())) {
             disableButtons();
-            info.setText(b20.getText() + " wins");
+            if(op1.isSelected()){
+                if(b21.getText().equals("O")) info.setText(b21.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b21.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b20.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -198,7 +258,15 @@ public class Controller implements Initializable {
         //COMPROBAR VERTICALES
         if(!b00.getText().equals("") && !b10.getText().equals("") && b00.getText().equals(b10.getText()) && b10.getText().equals(b20.getText())) {
             disableButtons();
-            info.setText(b00.getText() + " wins");
+            if(op1.isSelected()){
+                if(b00.getText().equals("O")) info.setText(b00.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b00.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b00.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -206,7 +274,15 @@ public class Controller implements Initializable {
         }
         if (!b01.getText().equals("") && !b11.getText().equals("") && b01.getText().equals(b11.getText()) && b11.getText().equals(b21.getText())) {
             disableButtons();
-            info.setText(b01.getText() + " wins");
+            if(op1.isSelected()){
+                if(b01.getText().equals("O")) info.setText(b01.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b01.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b01.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -214,7 +290,15 @@ public class Controller implements Initializable {
         }
         if (!b02.getText().equals("") && !b12.getText().equals("") && b02.getText().equals(b12.getText()) && b12.getText().equals(b22.getText())) {
             disableButtons();
-            info.setText(b02.getText() + " wins");
+            if(op1.isSelected()){
+                if(b02.getText().equals("O")) info.setText(b02.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b02.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b02.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -224,7 +308,15 @@ public class Controller implements Initializable {
         //COMPROBAR DIAGONALES
         if (!b00.getText().equals("") && !b11.getText().equals("") && b00.getText().equals(b11.getText()) && b11.getText().equals(b22.getText())) {
             disableButtons();
-            info.setText(b00.getText() + " wins");
+            if(op1.isSelected()){
+                if(b00.getText().equals("O")) info.setText(b00.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b00.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b00.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -232,7 +324,15 @@ public class Controller implements Initializable {
         }
         if (!b02.getText().equals("") && !b11.getText().equals("") && b02.getText().equals(b11.getText()) && b11.getText().equals(b20.getText())) {
             disableButtons();
-            info.setText(b02.getText() + " wins");
+            if(op1.isSelected()){
+                if(b02.getText().equals("O")) info.setText(b02.getText() + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op2.isSelected()){
+                if(b02.getText().equals("O")) info.setText(player2 + " wins");
+                else info.setText(player + " wins");
+            }
+            if(op3.isSelected()) info.setText(b02.getText() + " wins");
             if(op3.isSelected()) nextMove.setVisible(false);
             start.setVisible(true);
             return true;
@@ -278,5 +378,24 @@ public class Controller implements Initializable {
 
     public void nextMove(ActionEvent actionEvent) {
         if (op3.isSelected()) cvcGame(actionEvent);
+    }
+
+    public void save(ActionEvent actionEvent) {
+        if(op1.isSelected()){
+            player = playerName.getText();
+            playerName.setVisible(false);
+            playerNameText.setVisible(false);
+        }
+        else if(op2.isSelected()){
+            player = playerName.getText();
+            player2 = player2name.getText();
+            playerName.setVisible(false);
+            playerNameText.setVisible(false);
+            player2nametext.setVisible(false);
+            player2name.setVisible(false);
+        }
+
+        save.setVisible(false);
+
     }
 }
