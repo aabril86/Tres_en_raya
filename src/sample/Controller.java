@@ -29,8 +29,27 @@ public class Controller implements Initializable {
     @FXML
     MenuItem about;
 
-    private int n = 0;
-    private String player, player2;
+    private int n = 0; //cuenta las casillas que se marcan
+    private String player, player2; //nombre de los jugadores
+    private boolean turn = true; //para determinar de quién es el turno
+    private int nturnos = 0; //turnos para player vs cpu
+
+    //esconder los campos que no me interesan al iniciar el programa
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        start.setVisible(false);
+        info.setVisible(false);
+        nextMove.setVisible(false);
+        playerName.setVisible(false);
+        playerNameText.setVisible(false);
+        save.setVisible(false);
+        player2nametext.setVisible(false);
+        player2name.setVisible(false);
+        disableButtons();
+
+    }
+
+    //alterna la visibilidad de los campos para la información de los jugadores dependiendo del modo de juego seleccionado
     public void selected(ActionEvent actionEvent) {
         if(op1.isSelected()){
             if(player2nametext.isVisible()) player2nametext.setVisible(false);
@@ -57,23 +76,27 @@ public class Controller implements Initializable {
         }
         start.setVisible(true);
     }
+    //guarda los datos de los jugadores
+    public void save(ActionEvent actionEvent) {
+        if(op1.isSelected()){
+            player = playerName.getText();
+            playerName.setVisible(false);
+            playerNameText.setVisible(false);
+        }
+        else if(op2.isSelected()){
+            player = playerName.getText();
+            player2 = player2name.getText();
+            playerName.setVisible(false);
+            playerNameText.setVisible(false);
+            player2nametext.setVisible(false);
+            player2name.setVisible(false);
+        }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        start.setVisible(false);
-        info.setVisible(false);
-        nextMove.setVisible(false);
-        playerName.setVisible(false);
-        playerNameText.setVisible(false);
         save.setVisible(false);
-        player2nametext.setVisible(false);
-        player2name.setVisible(false);
-        disableButtons();
 
     }
 
-
-
+    //click de los botones, dependiendo si es el modo player vs cpu o player vs player
     public void onClick(ActionEvent actionEvent) {
 
         RadioButton rb = (RadioButton) g1.getSelectedToggle();
@@ -87,8 +110,6 @@ public class Controller implements Initializable {
 
     }
 
-    private boolean turn = true;
-    private int nturnos = 0;
 
     //PLAYER VS CPU
     public void pvcGame(ActionEvent actionEvent){
@@ -149,7 +170,6 @@ public class Controller implements Initializable {
     }
 
     //CPU VS CPU
-    //TODO ESTO
     public void cvcGame(ActionEvent actionEvent){
         Button b = (Button) actionEvent.getSource();
         List<Button>  buttons = new ArrayList<Button>(Arrays.asList(b00, b01, b02, b10, b11, b12, b20, b21, b22));
@@ -181,32 +201,13 @@ public class Controller implements Initializable {
 
     }
 
-
-    public void disableButtons(){
-        b00.setDisable(true);
-        b01.setDisable(true);
-        b02.setDisable(true);
-        b10.setDisable(true);
-        b11.setDisable(true);
-        b12.setDisable(true);
-        b20.setDisable(true);
-        b21.setDisable(true);
-        b22.setDisable(true);
+    //boton para poner el siguiente movimiento de la cpu, que sinó va muy rápido en el modo cpu vs cpu
+    public void nextMove(ActionEvent actionEvent) {
+        if (op3.isSelected()) cvcGame(actionEvent);
     }
 
-    public void enableButtons(){
-        b00.setDisable(false);
-        b01.setDisable(false);
-        b02.setDisable(false);
-        b10.setDisable(false);
-        b11.setDisable(false);
-        b12.setDisable(false);
-        b20.setDisable(false);
-        b21.setDisable(false);
-        b22.setDisable(false);
-    }
 
-    //Metodo comprobar ganador
+    //Metodo comprobar ganador/empate
     public boolean checkWinner(){
         n++;
         //COMPROBAR HORIZONTALES
@@ -354,6 +355,7 @@ public class Controller implements Initializable {
 
     }
 
+    //el boton start resetea el tablero
     public void starts(ActionEvent actionEvent) {
         n = 0;
         clearButtons();
@@ -365,6 +367,9 @@ public class Controller implements Initializable {
 
     }
 
+
+    //GESTIÓN DE LOS BOTONES
+    //limpia los botones para el restart
     public void clearButtons(){
         b00.setText("");
         b01.setText("");;
@@ -379,27 +384,32 @@ public class Controller implements Initializable {
         info.setText("");
     }
 
-    public void nextMove(ActionEvent actionEvent) {
-        if (op3.isSelected()) cvcGame(actionEvent);
+    //desactiva los botones
+    public void disableButtons(){
+        b00.setDisable(true);
+        b01.setDisable(true);
+        b02.setDisable(true);
+        b10.setDisable(true);
+        b11.setDisable(true);
+        b12.setDisable(true);
+        b20.setDisable(true);
+        b21.setDisable(true);
+        b22.setDisable(true);
     }
 
-    public void save(ActionEvent actionEvent) {
-        if(op1.isSelected()){
-            player = playerName.getText();
-            playerName.setVisible(false);
-            playerNameText.setVisible(false);
-        }
-        else if(op2.isSelected()){
-            player = playerName.getText();
-            player2 = player2name.getText();
-            playerName.setVisible(false);
-            playerNameText.setVisible(false);
-            player2nametext.setVisible(false);
-            player2name.setVisible(false);
-        }
-
-        save.setVisible(false);
-
+    //activa los botones
+    public void enableButtons(){
+        b00.setDisable(false);
+        b01.setDisable(false);
+        b02.setDisable(false);
+        b10.setDisable(false);
+        b11.setDisable(false);
+        b12.setDisable(false);
+        b20.setDisable(false);
+        b21.setDisable(false);
+        b22.setDisable(false);
     }
+
+
 
 }
